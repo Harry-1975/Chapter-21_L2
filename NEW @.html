@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Farsi Vocabulary Challenge - Chapter 21_Lesson 2</title>
+<style>
+  :root {
+    --color-correct: #4caf50;
+    --color-wrong: #f44336;
+    --color-choice-1: #2196f3;
+    --color-choice-2: #ff9800;
+    --color-choice-3: #9c27b0;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0; padding: 0;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 20px auto 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    min-height: 550px;
+  }
+
+  /* New Title */
+  .title {
+    text-align: center;
+    user-select: none;
+    margin-bottom: 6px;
+    font-size: 2.4rem;
+    font-weight: 700;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #555;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+
+  .farsi-word {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+    user-select: none;
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  .choice-btn {
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .choice-btn:hover:not(.disabled):not(.correct):not(.wrong) {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
+
+  .choice-1 {
+    background-color: var(--color-choice-1);
+  }
+  .choice-2 {
+    background-color: var(--color-choice-2);
+  }
+  .choice-3 {
+    background-color: var(--color-choice-3);
+  }
+
+  .correct {
+    background-color: var(--color-correct) !important;
+    cursor: default;
+  }
+  .wrong {
+    background-color: var(--color-wrong) !important;
+    cursor: default;
+  }
+  .disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .feedback-icon {
+    font-size: 1.6rem;
+    user-select: none;
+    margin-left: 10px;
+  }
+
+  .context-container {
+    padding: 15px 20px;
+    background: #eee;
+    border-radius: 8px;
+    color: #444;
+    font-size: 1.1rem;
+    user-select: none;
+    cursor: pointer;
+    filter: blur(6px);
+    position: relative;
+    transition: filter 0.4s ease;
+    margin-bottom: 10px;
+  }
+
+  .context-container.revealed {
+    filter: none;
+    cursor: default;
+  }
+
+  .context-label {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 10px;
+    user-select: none;
+  }
+
+  #contextSentence {
+    visibility: hidden;
+    user-select: text;
+  }
+
+  /* New play audio button */
+  #playAudioBtn {
+    display: inline-block;
+    margin: 0 20px 20px 20px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 7px;
+    border: none;
+    background-color: #1976d2;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+  #playAudioBtn:hover {
+    background-color: #115293;
+  }
+
+  .nav-bar {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+
+  .nav-button {
+    background-color: #1976d2;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 7px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .nav-button:disabled {
+    background-color: #9e9e9e;
+    cursor: default;
+  }
+
+  .nav-button:hover:not(:disabled) {
+    background-color: #115293;
+  }
+
+  .progress {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  /* Responsive */
+  @media (max-width: 520px) {
+    .container {
+      margin: 10px 15px 40px 15px;
+    }
+    .title {
+      font-size: 1.8rem;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+    }
+    .farsi-word {
+      font-size: 2.5rem;
+    }
+    .choice-btn {
+      font-size: 1rem;
+      padding: 12px;
+    }
+    #playAudioBtn {
+      margin: 0 10px 20px 10px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Farsi Vocabulary Challenge">
+
+  <!-- New Titles -->
+  <div class="title">Farsi Vocabulary Challenge</div>
+  <div class="subtitle">Chapter 21_Lesson 2</div>
+
+  <div class="farsi-word" id="farsiWord" aria-live="polite" aria-atomic="true">...</div>
+
+  <div class="choices" role="list" aria-label="English choices">
+    <button class="choice-btn choice-1" id="choice0" role="listitem" aria-pressed="false"></button>
+    <button class="choice-btn choice-2" id="choice1" role="listitem" aria-pressed="false"></button>
+    <button class="choice-btn choice-3" id="choice2" role="listitem" aria-pressed="false"></button>
+  </div>
+
+  <div class="context-container" id="contextContainer" tabindex="0" role="button" aria-pressed="false" aria-label="Click to reveal context sentence">
+    <div class="context-label" id="contextLabel">Click to reveal context sentence</div>
+    <div id="contextSentence"></div>
+  </div>
+
+  <!-- New Play Audio Button -->
+  <button id="playAudioBtn" aria-label="Play audio for the current Farsi word">▶ Play Audio</button>
+
+  <div class="nav-bar">
+    <button class="nav-button" id="backBtn" aria-label="Previous word">Back</button>
+    <div class="progress" id="progressText" aria-live="polite" aria-atomic="true"></div>
+    <button class="nav-button" id="nextBtn" aria-label="Next word">Next</button>
+  </div>
+
+</div>
+
+<script>
+  // Vocabulary data with English choices & context sentences
+  const vocabData = [
+  { farsi: "آتی", meaning: "future", context: "در برنامه‌ریزی‌های اقتصادی باید به نیازهای نسل‌های آتی توجه ویژه‌ای شود", audio: "https://www.dropbox.com/scl/fi/g0wgxfa94yhmuh8f4jovr/01.wav?rlkey=tbvbo6nk6dp26vlcd266hp2pd&st=x0c5ksbv&dl=1" },
+  { farsi: "باروَری", meaning: "fertility", context: "کاهش نرخ باروری در کشورهای صنعتی نگرانی‌هایی درباره‌ی آینده‌ی جمعیت ایجاد کرده است", audio: "https://www.dropbox.com/scl/fi/6owcr0vl32x9oa2a0mu4g/02.wav?rlkey=e9onfpoi0prwalu5jiv78ot18&st=8nguegm1&dl=1" },
+  { farsi: "بَچِّه‌دار شُدَن", meaning: "to have children", context: "بسیاری از زوج‌های جوان تصمیم می‌گیرند بچه‌دار شدن را تا رسیدن به ثبات مالی به تعویق بیندازند", audio: "https://www.dropbox.com/scl/fi/p9rpedj5kh19bkz9tpm3z/03.wav?rlkey=drtauqxkdhyn8mfaqkwc2bhz0&st=j2lh2hzw&dl=1" },
+  { farsi: "بیش اَز حَد", meaning: "excessive, too much", context: "مصرف بیش از حد قند و نمک می‌تواند منجر به بیماری‌های قلبی و دیابت شود", audio: "https://www.dropbox.com/scl/fi/hkfa11u4oa5cn479x4plk/04.wav?rlkey=dsjgvzrfobp6eg9bgqivciw85&st=67w8ukrl&dl=1" },
+  { farsi: "بِه‌ طُوری ‌کِه", meaning: "so that, in a way", context: "او سخنرانی را به طوری که همه حضار بتوانند موضوع را درک کنند، ساده و قابل فهم ارایه داد", audio: "https://www.dropbox.com/scl/fi/gplnwass46smskk416hp4/05.wav?rlkey=oxa34wxs7hdkm0jqooacw0u8z&st=k1luxnnv&dl=1" },
+  { farsi: "تَبلیغ کَردَن", meaning: "to advertise, to promote", context: "شرکت برای معرفی محصول جدید خود، در شبکه‌های اجتماعی تبلیغ کردن را آغاز کرده است", audio: "https://www.dropbox.com/scl/fi/bl08c45095a384017bhq9/06.wav?rlkey=hc7t9yc4o3rcmkvuilj0uc51i&st=ci3hbo55&dl=1" },
+  { farsi: "تَبلیغات", meaning: "propaganda, advertising", context: "تبلیغات تلویزیونی نقش مهمی در شکل‌گیری ذهنیت مردم نسبت به نام کالاها و برندها دارند", audio: "https://www.dropbox.com/scl/fi/oeoxrlxwoyf33aonsx6cj/07.wav?rlkey=auphouk864f786qr1d94pk0k9&st=uxhx2drl&dl=1" },
+  { farsi: "جامِعِه‌شِناس", meaning: "sociologist", context: "جامعه‌شناسان در تحقیقات خود به بررسی تأثیر رسانه‌ها بر رفتار نوجوانان می پردازند", audio: "https://www.dropbox.com/scl/fi/rnvf1d6lnw7zcak4eypqd/08.wav?rlkey=rkavzwb919k0a7yh026kqaflu&st=dzu2na1d&dl=1" },
+  { farsi: "خاص", meaning: "special, specific, peculiar", context: "این مراسم برای بزرگداشت یک شخصیت فرهنگی خاص برگزار شده بود که تأثیر زیادی بر هنر معاصر داشته است", audio: "https://www.dropbox.com/scl/fi/y21gyou3lope107fi6i7l/09.wav?rlkey=innwk2d07d6wf7rsmqfvlc06z&st=7vm5fhrv&dl=1" },
+  { farsi: "دَر دَستَرس", meaning: "available, accessible", context: "منابع آموزشی باید برای همه‌ی دانش‌آموزان به صورت رایگان و در دسترس باشد", audio: "https://www.dropbox.com/scl/fi/ug755ne6wmziyh5q78ie0/10.wav?rlkey=8nr31xhfaxatt3gnuugk3hsni&st=gz4yy7gw&dl=1" },
+  { farsi: "دُولَتمَرد", meaning: "statesman, politician", context: "دولتمردان باید تصمیماتی اتخاذ کنند که منافع بلندمدت کشور را تضمین کند", audio: "https://www.dropbox.com/scl/fi/c91c9q364frsiymcto8db/11.wav?rlkey=e5lnqlf085p74n2m8d3o2lvd3&st=zbs6ixwz&dl=1" },
+  { farsi: "دیرهِنگام", meaning: "late", context: "واکنش دیرهنگام دولت به بحران اقتصادی باعث افزایش نارضایتی عمومی شد", audio: "https://www.dropbox.com/scl/fi/vty2qnu5mgxlfm2b8k5zt/12.wav?rlkey=u4zldj8e55foo925x65w94m5t&st=5p6y51gz&dl=1" },
+  { farsi: "رَهبَر", meaning: "leader, head", context: "رهبر گروه با تصمیم‌گیری‌های هوشمندانه توانست پروژه را با موفقیت به پایان برساند", audio: "https://www.dropbox.com/scl/fi/q51fvsnaveif9oncyspd8/13.wav?rlkey=yqwgwaoo462szzvuiqbehqvcf&st=tr6fweru&dl=1" },
+  { farsi: "زاد‌ و‌ وَلَد", meaning: "birth, breeding", context: "کاهش زاد و ولد در برخی کشورها باعث نگرانی درباره‌ی آینده‌ی نیروی کار شده است", audio: "https://www.dropbox.com/scl/fi/my2yjqlfrcfsz7jczjw19/14.wav?rlkey=ajsx35n6gxlrhjplqkwep3q00&st=x2iclkoe&dl=1" },
+  { farsi: "سالخُوردِگی", meaning: "old age", context: "با افزایش سالخوردگی جمعیت، نیاز به خدمات درمانی و مراقبتی بیشتر احساس می‌شود", audio: "https://www.dropbox.com/scl/fi/jkkrnudbtpcfjvlbf45es/15.wav?rlkey=vvrfsz9mibe2udza46qmzud0h&st=b45m4zqx&dl=1" },
+  { farsi: "سالمَند", meaning: "elderly, old", context: "سالمندان نیاز به حمایت‌های اجتماعی و روانی بیشتری در دوران بازنشستگی دارند", audio: "https://www.dropbox.com/scl/fi/m1l36r1aob0shypgnje8e/16.wav?rlkey=2dtbfb73cr9j6ymarz3zoj0kq&st=bmat06tt&dl=1" },
+  { farsi: "سَرشُماری", meaning: "census, head count", context: "سرشماری ملی اطلاعات مهمی درباره‌ی ترکیب جمعیتی کشور فراهم می‌کند", audio: "https://www.dropbox.com/scl/fi/jsuwcljl6jdhue8pxvm5i/17.wav?rlkey=a7yyyws2n3ismg45tcvw8svtc&st=9d2awwjh&dl=1" },
+  { farsi: "سِقطِ‌ جَنین", meaning: "abortion, miscarriage", context: "موضوع سقط جنین یکی از مباحث پیچیده و بحث‌برانگیز در حوزه‌ی حقوق بشر است", audio: "https://www.dropbox.com/scl/fi/36hu3gd3mipwnhh0sjzfs/18.wav?rlkey=slqh2qrfts51n8gkc7ug0bpdp&st=aabphi7s&dl=1" },
+  { farsi: "صَبر کردن", meaning: "to wait", context: "در شرایط سخت زندگی، صبر کردن و امید داشتن می‌تواند به انسان کمک کند تا مسیر را ادامه دهد", audio: "https://www.dropbox.com/scl/fi/szymk06qtmvnoehdw3sm1/19.wav?rlkey=8n3ys3olhlwczk8kv6806qqcu&st=my5c2sms&dl=1" },
+  { farsi: "ضَرورَت", meaning: "necessity", context: "آموزش مهارت‌های زندگی برای نوجوانان یک ضرورت اجتناب‌ناپذیر در دنیای امروز است", audio: "https://www.dropbox.com/scl/fi/rzsr9sehbqnyux1wrl1zj/20.wav?rlkey=rhpnhrtjybf9v3rj7rnjx2ltd&st=57c71tnl&dl=1" },
+  { farsi: "عَمدی", meaning: "intentional, deliberate", context: "آسیب وارد شده به آثار تاریخی کاملاً عمدی بوده و باید با عاملان آن برخورد قانونی شود", audio: "https://www.dropbox.com/scl/fi/tptcyjh83oub9fl8rncnm/21.wav?rlkey=8oeq2pm3h8cnrfk690loi3vtk&st=j7ylrzxb&dl=1" },
+  { farsi: "فَرزَند ‌آوَری", meaning: "childbirth", context: "سیاست‌های تشویقی دولت برای افزایش فرزندآوری هنوز نتوانسته تأثیر قابل توجهی داشته باشد", audio: "https://www.dropbox.com/scl/fi/j4l4scotxyfg12w1baj5v/22.wav?rlkey=8rhg2tp0swwtkyxrk3n0hahsz&st=arycgkpq&dl=1" },
+  { farsi: "مَرگ ‌و ‌میر", meaning: "mortality, death", context: "آمار مرگ و میر ناشی از بیماری‌های قلبی در سال‌های اخیر افزایش یافته است", audio: "https://www.dropbox.com/scl/fi/81uy8zaixjv8uxvs8r3fe/23.wav?rlkey=xtlr5rupny7oid1kgcn9quduu&st=oovxefsq&dl=1" },
+  { farsi: "نَسل", meaning: "generation", context: "نسل جدید با فناوری‌های نوین رشد کرده و دیدگاه متفاوتی نسبت به مسائل اجتماعی دارد", audio: "https://www.dropbox.com/scl/fi/9s5v4qgaro2b5ya2oztm1/24.wav?rlkey=utnqrzsmzz6a7vvof5y2eok70&st=bbdka2dv&dl=1" },
+];
+
+  // Replace empty audio strings with your Dropbox public link URLs for each word if you have audio per word.
+
+  // Example: vocabData[0].audio = "https://www.dropbox.com/s/yourfile.mp3?raw=1";
+
+  // Utility: shuffle array for choices
+  function shuffleArray(arr) {
+    for (let i = arr.length -1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  // Generate 3 choices per question: 1 correct + 2 random wrongs
+  function getChoices(correctMeaning, allMeanings) {
+    const wrongs = allMeanings.filter(m => m !== correctMeaning);
+    shuffleArray(wrongs);
+    const choices = [correctMeaning, wrongs[0], wrongs[1]];
+    shuffleArray(choices);
+    return choices;
+  }
+
+  // Elements
+  const farsiWordEl = document.getElementById('farsiWord');
+  const choiceButtons = [
+    document.getElementById('choice0'),
+    document.getElementById('choice1'),
+    document.getElementById('choice2'),
+  ];
+  const contextContainer = document.getElementById('contextContainer');
+  const contextLabel = document.getElementById('contextLabel');
+  const contextSentenceEl = document.getElementById('contextSentence');
+  const playAudioBtn = document.getElementById('playAudioBtn');
+  const backBtn = document.getElementById('backBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const progressText = document.getElementById('progressText');
+
+  let currentIndex = 0;
+  let attempts = 0; // max 2 attempts per word
+  let correctAnswer = "";
+  let choices = [];
+
+  const allMeanings = vocabData.map(v => v.meaning);
+
+  function loadWord(index) {
+    attempts = 0;
+    contextContainer.classList.remove('revealed');
+    contextLabel.style.display = 'block';
+    contextSentenceEl.style.visibility = 'hidden';
+    contextSentenceEl.textContent = '';
+
+    const entry = vocabData[index];
+    farsiWordEl.textContent = entry.farsi;
+
+    choices = getChoices(entry.meaning, allMeanings);
+    correctAnswer = entry.meaning;
+
+    choiceButtons.forEach((btn, i) => {
+      btn.disabled = false;
+      btn.classList.remove('correct', 'wrong', 'disabled');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.innerHTML = choices[i] + ' <span class="feedback-icon" aria-hidden="true"></span>';
+    });
+
+    // Update progress
+    progressText.textContent = `Vocabulary ${index + 1} of ${vocabData.length}`;
+
+    // Navigation buttons enable/disable
+    backBtn.disabled = index === 0;
+    nextBtn.disabled = index === vocabData.length - 1;
+
+    // Reset audio if playing
+    if (window.audio) {
+      window.audio.pause();
+      window.audio.currentTime = 0;
+    }
+  }
+
+  // Handle answer choice clicks
+  function onChoiceClick(e) {
+    if (attempts >= 2) return; // no more interaction
+
+    const btn = e.currentTarget;
+    const chosenText = choices[choiceButtons.indexOf(btn)];
+
+    if (btn.classList.contains('correct') || btn.classList.contains('wrong')) {
+      return; // already answered
+    }
+
+    if (chosenText === correctAnswer) {
+      btn.classList.add('correct');
+      btn.querySelector('.feedback-icon').textContent = '✔';
+      disableChoices();
+    } else {
+      attempts++;
+      btn.classList.add('wrong');
+      btn.querySelector('.feedback-icon').textContent = '✖';
+      if (attempts >= 2) {
+        disableChoices();
+        // Show correct answer
+        const correctBtn = choiceButtons.find(b => {
+          const idx = choiceButtons.indexOf(b);
+          return choices[idx] === correctAnswer;
+        });
+        if (correctBtn) {
+          correctBtn.classList.add('correct');
+          correctBtn.querySelector('.feedback-icon').textContent = '✔';
+        }
+      }
+    }
+    btn.setAttribute('aria-pressed', 'true');
+  }
+
+  // Disable all choice buttons
+  function disableChoices() {
+    choiceButtons.forEach(btn => {
+      btn.disabled = true;
+      btn.classList.add('disabled');
+    });
+  }
+
+  // Reveal context sentence on click
+  contextContainer.addEventListener('click', () => {
+    if (!contextContainer.classList.contains('revealed')) {
+      contextContainer.classList.add('revealed');
+      contextLabel.style.display = 'none';
+      contextSentenceEl.textContent = vocabData[currentIndex].context;
+      contextSentenceEl.style.visibility = 'visible';
+    }
+  });
+
+  // Keyboard accessibility for context container
+  contextContainer.addEventListener('keydown', (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && !contextContainer.classList.contains('revealed')) {
+      e.preventDefault();
+      contextContainer.click();
+    }
+  });
+
+  // Play audio button
+  playAudioBtn.addEventListener('click', () => {
+    const audioUrl = vocabData[currentIndex].audio;
+    if (!audioUrl) {
+      alert("No audio available for this word.");
+      return;
+    }
+    if (window.audio) {
+      window.audio.pause();
+      window.audio.currentTime = 0;
+    }
+    window.audio = new Audio(audioUrl);
+    window.audio.play();
+  });
+
+  // Navigation buttons
+  backBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      loadWord(currentIndex);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < vocabData.length - 1) {
+      currentIndex++;
+      loadWord(currentIndex);
+    }
+  });
+
+  // Attach event listeners to choice buttons
+  choiceButtons.forEach(btn => {
+    btn.addEventListener('click', onChoiceClick);
+  });
+
+  // Initial load
+  loadWord(currentIndex);
+
+</script>
+</body>
+</html>
